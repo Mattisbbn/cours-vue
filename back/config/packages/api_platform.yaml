@@ -1,0 +1,13 @@
+api_platform:
+    title: Todo API
+    description: API Symfony pour gerer une todo list
+    version: 1.0.0
+    formats:
+        jsonld: ["application/ld+json"]
+        json: ["application/json"]
+    patch_formats:
+        json: ["application/merge-patch+json"]
+    defaults:
+        stateless: true
+        cache_headers:
+            vary: ["Content-Type", "Authorization", "Origin"]
