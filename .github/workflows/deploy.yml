@@ -29,8 +29,9 @@ jobs:
       - name: Frontend production build
         run: |
           cd front
-          npm ci
-          npm run build
+          corepack enable
+          pnpm install --frozen-lockfile
+          pnpm run build
 
   deploy:
     name: Deploy to VPS
@@ -39,7 +40,7 @@ jobs:
 
     steps:
       - name: SSH deploy
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.5
         with:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
