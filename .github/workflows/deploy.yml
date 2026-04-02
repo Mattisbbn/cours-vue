@@ -59,7 +59,7 @@ jobs:
             git pull --ff-only origin main
 
             # Rebuild and restart
-            docker-compose build --pull back front
+            docker-compose build back front
             docker-compose up -d --force-recreate back front
 
             # Run migrations if needed
