@@ -42,14 +42,13 @@ jobs:
       - name: SSH deploy
         uses: appleboy/ssh-action@v1.2.5
         with:
-          host: ${{ secrets.VPS_HOST }}
-          username: ${{ secrets.VPS_USER }}
+          host: ${{ secrets.VPS_HOST || vars.VPS_HOST }}
+          username: ${{ secrets.VPS_USER || vars.VPS_USER }}
           key: ${{ secrets.VPS_SSH }}
-          port: ${{ secrets.VPS_PORT }}
-          script_stop: true
+          port: ${{ secrets.VPS_PORT || vars.VPS_PORT || '22' }}
           script: |
             set -e
-            cd ${{ secrets.VPS_APP_PATH }}
+            cd ${{ secrets.VPS_APP_PATH || vars.VPS_APP_PATH }}
 
             if docker compose version >/dev/null 2>&1; then
               COMPOSE="docker compose"
