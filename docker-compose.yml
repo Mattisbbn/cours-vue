@@ -3,6 +3,8 @@ services:
     build: ./back
     ports:
       - "8005:80"
+    volumes:
+      - back_data:/var/www/html/var
     environment:
       # On force l'URL SQLite vers le dossier var/
       DATABASE_URL: "sqlite:///%kernel.project_dir%/var/data.db"
@@ -14,3 +16,6 @@ services:
       - "8085:80"
     depends_on:
       - back
+
+volumes:
+  back_data:
