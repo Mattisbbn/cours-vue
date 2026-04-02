@@ -48,40 +48,8 @@ jobs:
           script: |
             set -e
             cd ${{ secrets.VPS_APP_PATH }}
-
-            # Sync code
-            old_rev="$(git rev-parse HEAD 2>/dev/null || true)"
-            git fetch --all
             git checkout main
             git pull 
-            new_rev="$(git rev-parse HEAD)"
-
-            services_to_build=""
-            if [ -n "$old_rev" ] && [ "$old_rev" != "$new_rev" ]; then
-              changed_files="$(git diff --name-only "$old_rev" "$new_rev")"
-              echo "Changed files between deploy revisions:"
-              echo "$changed_files"
-
-              if echo "$changed_files" | grep -qE '^(back/|docker-compose\.yml$)'; then
-                services_to_build="$services_to_build back"
-              fi
-
-              if echo "$changed_files" | grep -qE '^(front/|docker-compose\.yml$)'; then
-                services_to_build="$services_to_build front"
-              fi
-            fi
-
-            # Rebuild only services impacted by this revision
-            export DOCKER_BUILDKIT=1
-            export COMPOSE_DOCKER_CLI_BUILD=1
-            if [ -n "$services_to_build" ]; then
-              echo "Rebuilding services:$services_to_build"
-              docker-compose build --parallel $services_to_build
-            else
-              echo "No back/front changes detected, skipping docker-compose build"
-            fi
-
-            docker-compose up -d --remove-orphans back front
-
-            # Run migrations if needed
-            docker-compose exec -T -e APP_ENV=prod -e APP_DEBUG=0 back php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+            docker compose down
+            docker compose build
+            docker compose up -d
