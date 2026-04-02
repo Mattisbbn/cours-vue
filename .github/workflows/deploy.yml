@@ -19,12 +19,12 @@ jobs:
         uses: docker/setup-buildx-action@v3
 
       - name: Build Docker images
-        run: docker-compose -f docker-compose.yml build --pull
+        run: docker compose -f docker-compose.yml build --pull
 
       - name: Backend sanity checks
         run: |
-          docker-compose run --rm back php -v
-          docker-compose run --rm back php bin/console doctrine:migrations:status --no-interaction
+          docker compose run --rm back php -v
+          docker compose run --rm back php bin/console doctrine:migrations:status --no-interaction
 
       - name: Frontend production build
         run: |
@@ -50,14 +50,26 @@ jobs:
             set -e
             cd ${{ secrets.VPS_APP_PATH }}
 
+            if docker compose version >/dev/null 2>&1; then
+              COMPOSE="docker compose"
+            elif command -v docker-compose >/dev/null 2>&1; then
+              COMPOSE="docker-compose"
+            else
+              echo "No docker compose command found on VPS"
+              exit 1
+            fi
+
             # Sync code
             git fetch --all
             git checkout main
             git pull --ff-only origin main
 
             # Rebuild and restart
-            docker-compose build --pull back front
-            docker-compose up -d --force-recreate back front
+            $COMPOSE build --pull back front
+            $COMPOSE up -d --force-recreate back front
+
+            # Run migrations if needed
+            $COMPOSE exec -T back php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
 
             # Cleanup old dangling images
             docker image prune -f
