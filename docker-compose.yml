@@ -2,7 +2,7 @@ services:
   back:
     build: ./back
     ports:
-      - "8000:80"
+      - "8005:80"
     environment:
       # On force l'URL SQLite vers le dossier var/
       DATABASE_URL: "sqlite:///%kernel.project_dir%/var/data.db"
@@ -11,6 +11,6 @@ services:
   front:
     build: ./front
     ports:
-      - "8080:80"
+      - "8085:80"
     depends_on:
       - back
