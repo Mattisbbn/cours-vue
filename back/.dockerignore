@@ -1,0 +1,8 @@
+vendor/
+var/
+.git/
+.env.local
+.env.local.php
+.env.*.local
+docker-compose.yml
+Dockerfile
