@@ -50,6 +50,9 @@ jobs:
             set -e
             cd ${{ secrets.VPS_APP_PATH || vars.VPS_APP_PATH }}
 
+            # Allow git operations in this path even if ownership differs
+            git config --global --add safe.directory "$(pwd)"
+
             # Sync code
             git fetch --all
             git checkout main
