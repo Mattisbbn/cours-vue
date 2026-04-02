@@ -50,26 +50,17 @@ jobs:
             set -e
             cd ${{ secrets.VPS_APP_PATH || vars.VPS_APP_PATH }}
 
-            if docker compose version >/dev/null 2>&1; then
-              COMPOSE="docker compose"
-            elif command -v docker-compose >/dev/null 2>&1; then
-              COMPOSE="docker-compose"
-            else
-              echo "No docker compose command found on VPS"
-              exit 1
-            fi
-
             # Sync code
             git fetch --all
             git checkout main
             git pull --ff-only origin main
 
             # Rebuild and restart
-            $COMPOSE build --pull back front
-            $COMPOSE up -d --force-recreate back front
+            docker-compose build --pull back front
+            docker-compose up -d --force-recreate back front
 
             # Run migrations if needed
-            $COMPOSE exec -T back php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+            docker-compose exec -T back php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
 
             # Cleanup old dangling images
             docker image prune -f
