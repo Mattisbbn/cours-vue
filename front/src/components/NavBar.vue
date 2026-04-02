@@ -8,6 +8,7 @@ import Button from './ui/button/Button.vue'
       <li><RouterLink :to="{ name: 'homepage' }">Homepage</RouterLink></li>
       <li><RouterLink :to="{ name: 'form' }">Formulaire</RouterLink></li>
       <li><RouterLink :to="{ name: 'todo' }">Todo API</RouterLink></li>
+      <li><RouterLink :to="{ name: 'fonctionalites' }">Fonctionalités</RouterLink></li>
     </ul>
     <Button variant="outline">Super button shadcn</Button>
   </nav>
