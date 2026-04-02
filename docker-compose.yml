@@ -6,6 +6,8 @@ services:
     volumes:
       - back_data:/var/www/html/var
     environment:
+      APP_ENV: prod
+      APP_DEBUG: "0"
       # On force l'URL SQLite vers le dossier var/
       DATABASE_URL: "sqlite:///%kernel.project_dir%/var/data.db"
 
