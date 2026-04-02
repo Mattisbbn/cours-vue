@@ -24,7 +24,7 @@ jobs:
       - name: Backend sanity checks
         run: |
           docker compose run --rm back php -v
-          docker compose run --rm back php bin/console doctrine:migrations:status --no-interaction
+          docker compose run --rm -e APP_ENV=prod -e APP_DEBUG=0 back php bin/console doctrine:migrations:status --no-interaction
 
       - name: Frontend production build
         run: |
@@ -65,4 +65,4 @@ jobs:
             docker-compose up -d --remove-orphans back front
 
             # Run migrations if needed
-            docker-compose exec -T back php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
+            docker-compose exec -T -e APP_ENV=prod -e APP_DEBUG=0 back php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
