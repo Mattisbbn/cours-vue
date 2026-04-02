@@ -68,7 +68,7 @@ class Todo
         return $this;
     }
 
-    public function isDone(): bool
+    public function getIsDone(): bool
     {
         return $this->isDone;
     }
