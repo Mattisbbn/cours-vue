@@ -2,7 +2,7 @@ FROM node:25-alpine AS build-stage
 
 WORKDIR /app
 
-RUN corepack enable
+RUN npm install -g pnpm
 
 COPY package.json pnpm-lock.yaml ./
 
