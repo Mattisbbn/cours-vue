@@ -1,5 +1,7 @@
 <script setup>
 import BaseLayout from '@/layouts/BaseLayout.vue'
+import Card from '@/components/ui/card/Card.vue'
+import Button from '@/components/ui/button/Button.vue'
 
 const makeNotification = () => {
   const notification = new Notification('Hello world!', {
@@ -15,6 +17,8 @@ const makeNotification = () => {
 
 <template>
   <BaseLayout>
-    <div @click="makeNotification">Notification</div>
+    <Card class="w-24 h-24">
+      <Button @click="makeNotification">Notification</Button>
+    </Card>
   </BaseLayout>
 </template>
