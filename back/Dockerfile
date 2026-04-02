@@ -15,9 +15,13 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
 WORKDIR /var/www/html
 
+COPY composer.json composer.lock ./
+
+RUN composer install --no-dev --no-interaction --prefer-dist --no-progress --optimize-autoloader
+
 COPY . .
 
-RUN composer install --no-interaction --prefer-dist --no-progress --optimize-autoloader
+RUN composer dump-autoload --no-dev --classmap-authoritative
 
 ENV APACHE_DOCUMENT_ROOT /var/www/html/public
 RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/sites-available/*.conf

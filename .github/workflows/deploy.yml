@@ -58,12 +58,11 @@ jobs:
             git checkout main
             git pull --ff-only origin main
 
-            # Rebuild and restart
-            docker-compose build back front
-            docker-compose up -d --force-recreate back front
+            # Rebuild and restart with cache-friendly defaults
+            export DOCKER_BUILDKIT=1
+            export COMPOSE_DOCKER_CLI_BUILD=1
+            docker-compose build --parallel back front
+            docker-compose up -d --remove-orphans back front
 
             # Run migrations if needed
             docker-compose exec -T back php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration
-
-            # Cleanup old dangling images
-            docker image prune -f
