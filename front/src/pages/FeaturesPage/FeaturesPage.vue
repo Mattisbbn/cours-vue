@@ -3,12 +3,29 @@ import BaseLayout from '@/layouts/BaseLayout.vue'
 import Card from '@/components/ui/card/Card.vue'
 import Button from '@/components/ui/button/Button.vue'
 
-const makeNotification = () => {
-  const notification = new Notification('Hello world!', {
-    body: 'This is a notification from Vue.js',
-    icon: 'https://vuejs.org/images/logo.png',
-  })
+const makeNotification = async () => {
+  let permission = await Notification.requestPermission()
 
+  if (permission !== 'granted') {
+    return
+  }
+
+  const title = 'Notification test'
+  const options = {
+    body: 'Voici une notification de test',
+    icon: '/pwa-192x192.png',
+    badge: '/pwa-192x192.png',
+  }
+
+  if ('serviceWorker' in navigator) {
+    const registration = await navigator.serviceWorker.getRegistration()
+    if (registration) {
+      await registration.showNotification(title, options)
+      return
+    }
+  }
+
+  const notification = new Notification(title, options)
   notification.onclick = () => {
     console.log('Notification clicked!')
   }

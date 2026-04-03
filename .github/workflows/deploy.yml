@@ -9,10 +9,20 @@ jobs:
   test:
     name: Build And Checks
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v4
@@ -25,12 +35,8 @@ jobs:
           docker compose run --rm back php -v
           docker compose run --rm -e APP_ENV=prod -e APP_DEBUG=0 back php bin/console doctrine:migrations:status --no-interaction
 
-      - name: Frontend production build
-        run: |
-          cd front
-          corepack enable
-          pnpm install --no-frozen-lockfile
-          pnpm run build
+      - name: Push Docker images to GHCR
+        run: docker compose -f docker-compose.yml push
 
   deploy:
     name: Deploy to VPS
@@ -49,7 +55,6 @@ jobs:
             set -e
             cd ${{ secrets.VPS_APP_PATH }}
             git checkout main
-            git pull 
-            docker-compose down
-            docker-compose build
-            docker-compose up -d
+            git pull origin main
+            docker compose pull
+            docker compose up -d
