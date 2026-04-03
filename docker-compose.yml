@@ -1,7 +1,7 @@
 services:
   back:
     build: ./back
-    image: ghcr.io/Mattisbbn/cours-vue/back:latest
+    image: ghcr.io/mattisbbn/cours-vue/back:latest
     ports:
       - "8005:80"
     volumes:
@@ -11,10 +11,9 @@ services:
       APP_DEBUG: "0"
       SERVER_NAME: ":80"
       DATABASE_URL: "sqlite:///%kernel.project_dir%/var/data.db"
-
-  # Frontend Vue
   front:
     build: ./front
+    image: ghcr.io/mattisbbn/cours-vue/front:latest
     ports:
       - "8085:80"
     depends_on:

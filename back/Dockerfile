@@ -17,9 +17,8 @@ RUN mkdir -p var/cache var/log \
 
 RUN composer dump-autoload --no-dev --classmap-authoritative
 
-ENV SERVER_NAME=:80
+ENV SERVER_NAME=":80"
 
 RUN setcap CAP_NET_BIND_SERVICE=+ep /usr/local/bin/frankenphp
 
 USER www-data
-
