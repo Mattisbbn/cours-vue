@@ -1,14 +1,15 @@
 services:
   back:
     build: ./back
+    image: ghcr.io/Mattisbbn/cours-vue/back:latest
     ports:
       - "8005:80"
     volumes:
-      - back_data:/var/www/html/var
+      - back_data:/app/var
     environment:
       APP_ENV: prod
       APP_DEBUG: "0"
-      # On force l'URL SQLite vers le dossier var/
+      SERVER_NAME: ":80"
       DATABASE_URL: "sqlite:///%kernel.project_dir%/var/data.db"
 
   # Frontend Vue
